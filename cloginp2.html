@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt_BR">
+  <head>
+    <title>GetJob</title>
+    <link rel="stylesheet" href="cadastro css.css" />
+  </head>
+  <body>
+   
+
+    <main>
+      <section class="section" id="home">
+        <nav class="logo2">
+          <a class="logo" href="#">Get<span>Job</span>.</a>
+          <div class="menu">...</div>
+        </nav>
+        <div class="container grid">
+          <div class="text">
+
+            <h1>login</h1>
+            
+
+          
+            <input type="text" id="email" name="email" placeholder="email"/>
+            <br />
+      
+            
+            <input type="password" id="senha" name="senha" placeholder="senha" />
+            <input type="checkbox" onclick="esconder1()" />Mostrar senha
+            <br /><br> <br /><br>
+            <button type="submit" id='login' name="login" value="login">login</button>
+            <a href="cadastrop1.html">Cadastrar</a>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script>
+
+    //esconder senha
+
+      function esconder1() {
+        var esconder = document.getElementById('senha')
+        if (esconder.type === 'password') {
+          esconder.type = 'text'
+        } else {
+          esconder.type = 'password'
+        }
+      }
+
+      function esconder2() {
+        var esconder = document.getElementById('senha2')
+        if (esconder.type === 'password') {
+          esconder.type = 'text'
+        } else {
+          esconder.type = 'password'
+        }
+      }
+    </script>
+  </body>
+</html>     
