@@ -8,13 +8,6 @@
     text-decoration: none;
   }
   
-.btn-abrir{
-  font-size: 25px;
-  margin-right: 100%;
-}
-
-
-
   img {
     max-width: 100%;
     display: block;
@@ -57,6 +50,15 @@
   }
   
     
+  .nav-list {
+    list-style: none;
+    display: flex;
+  }
+  
+  .nav-list li {
+    letter-spacing: 3px;
+    margin-left: 22px;
+  }
   
   
   .btn-link {
@@ -95,7 +97,7 @@
   }
   
   .card{
-    width: 910px;
+    width: 1170px;
     background-color: rgb(107, 107, 107);
     height: 300px;
     
@@ -105,38 +107,30 @@
     padding: 5rem 0;
   }
   
- header{
-  padding: 10px;
- }
+  #header {
+    border-bottom: 1px solid #e4e4e4;
+    margin-bottom: 2rem;
+    display: flex;
   
-  nav {
-    background-color: var(--base-color);
-    height: 100%;
-    width: 0px;
     position: fixed;
     top: 0;
-    right: 0;
-    z-index: 1;
-    overflow: hidden;
-    transition: width 0.3s;
+    left: 0;
+    z-index: 100;
+    background-color: var(--body-color);
+    width: 100%;
   }
   
-nav a {
-  color: white;
-  font-size: 20px;
-  display: block;
-  padding: 12px 10px 12px 32px;
-}
-
-nav a :hover{
-  color: var(--base-color);
-  background-color: white;
-}
-
+  nav {
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
   .logo {
     font: 700 1.31rem 'Poppins', sans-serif;
     color: var(--title-color);
-    margin-right: 92%;
   }
   
   .logo span {
@@ -145,7 +139,6 @@ nav a :hover{
   
   main {
     margin-top: var(--header-height);
-    margin-right: 0.4;
   }
   
   /*====  HOME ============================ */
