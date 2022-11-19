@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/11.enviarvideo.css">
+    <title>Enviar vídeo</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="form-image">
+            <img src="pngwing.com.png" alt="">
+        </div>
+        <div class="form">
+            <form action="#">
+                <div class="form-header">
+                    <div class="title">
+                        <h1>enviar vídeo</h1>
+                    </div>
+                    
+                </div>
+
+                <a> selecione a capa do seu vídeo</a>
+                <div class="input-group">
+                  
+                  
+                  <label class="picture" for="picture__input" tabIndex="0">
+                    <span class="picture__image"></span>
+                  </label>
+                  <input type="file" name="picture__input" id="picture__input">
+                </div>
+
+                
+                <a> selecione seu vídeo</a>
+                <div class="input-group">
+                 
+                  <br>
+                  <label class="picture" for="picture__input" tabIndex="0">
+                    <span class="picture__image"></span>
+                  </label>
+                  
+                  <input type="file" name="picture__input" id="picture__input">
+
+                </div>
+
+                <div class="input-group">
+                  <div class="input-box">
+                      <label for="titulo">Titulo do vídeo</label>
+                      <input id="titulo" type="titulo" name="titulo" placeholder="Digite o titulo" required>
+                  </div>
+                </div>
+
+                <div class="input-group">
+                   
+                  <div class="input-box">
+                        <label for="Descrição">Descrição do vídeo</label>
+                        <input id="Descrição" type="Descrição" name="Descrição" placeholder="Digite a Descrição" required>
+                    </div>
+                </div>
+
+                <div class="continue-button">
+                    <button type="submit" id='enviar' name="enviar" value="enviar"> Enviar vídeo</button>
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+</body>
+<script>
+    const inputFile = document.querySelector("#picture__input");
+const pictureImage = document.querySelector(".picture__image");
+const pictureImageTxt = "Choose an image";
+pictureImage.innerHTML = pictureImageTxt;
+
+inputFile.addEventListener("change", function (e) {
+  const inputTarget = e.target;
+  const file = inputTarget.files[0];
+
+  if (file) {
+    const reader = new FileReader();
+
+    reader.addEventListener("load", function (e) {
+      const readerTarget = e.target;
+
+      const img = document.createElement("img");
+      img.src = readerTarget.result;
+      img.classList.add("picture__img");
+
+      pictureImage.innerHTML = "";
+      pictureImage.appendChild(img);
+    });
+
+    reader.readAsDataURL(file);
+  } else {
+    pictureImage.innerHTML = pictureImageTxt;
+  }
+});
+
+
+</script>
+
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="8.cadastroespecial.css">
+    <title>Formulário</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="form-image">
+            <img src="Cadastrar_img.svg" alt="">
+        </div>
+        <div class="form">
+            <form action="#">
+                <div class="form-header">
+                    <div class="title">
+                        <h1>Cadastro especial</h1>
+                    </div>
+                </div>
+
+            <a>Para enviar um vídeo faça o cadastro especial!</a>
+<br>
+<br>
+                <div class="input-group">
+                    <div class="input-box">
+                        <label for="name">Nome completo</label>
+                        <input id="name" type="text" name="name" placeholder="Digite seu nome completo" required>
+                    </div>
+
+                    
+                    <div class="input-box">
+                        <label for="RG">RG</label>
+                        <input id="RG" type="RG" name="RG" placeholder="Digite seu RG" required>
+                    </div>
+
+                </div>
+                <div class="input-group">
+                    <div class="input-box">
+                        <label for="CNPJ">CNPJ</label>
+                        <input id="CNPJ" type="CNPJ" name="CNPJ" placeholder="Digite sua CNPJ" required>
+                    </div>
+
+
+                    <div class="input-box">
+                        <label for="CPF">CPF</label>
+                        <input id="CPF" type="CPF" name="CPF" placeholder="Digite seu CPF" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                  <div class="input-box">
+                      <label for="CEP">CEP</label>
+                      <input id="CEP" type="CEP" name="CEP" placeholder="Digite seu CEP" required>
+                  </div>
+
+
+                  <div class="input-box">
+                      <label for="confirmPassword">Confirme sua Senha</label>
+                      <input id="confirmPassword" type="password" name="confirmPassword" placeholder="Digite sua senha novamente" required>
+                  </div>
+              </div>
+
+                <div class="continue-button">
+                    <button type="submit" id='cadastrar' name="cadastrar" value="cadastrar"> Cadastro especial!</button>
+                </div>
+                <div class="continue-button">
+                  <button><a href="5.pagdevideo.html">Voltar para o GetJob</a> </button>
+              </div>
+
+            </form>
+        </div>
+    </div>
+</body>
+<script>
+    var email = document.getElementById('email').value;
+    var senha = document.getElementById('password').value;
+    var nome = document.getElementById('firstname').value;
+
+    cadastrar.addEventListener('click',(e) => {
+     alert(email,senha,nome)
+
+    })
+</script>
+
+</html>
