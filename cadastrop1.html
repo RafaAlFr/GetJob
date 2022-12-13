@@ -2,7 +2,7 @@
 <html lang="pt_BR">
   <head>
     <title>GetJob</title>
-    <link rel="stylesheet" href="cadastro css.css" />
+    <link rel="stylesheet" href="style/cadastro.css" />
   </head>
   <body>
    
@@ -15,17 +15,11 @@
         </nav>
         <div class="container grid">
           <div class="text">
-
-            <h1>Cadastrar</h1>
-            
-            <input type="text" id="nome" name="nome" placeholder="Nome de usuario"/>
-            <br />
-
-          
+            <h1>Cadastrar</h1> 
+            <!-- <input type="text" id="nome" name="nome" placeholder="Nome de usuario"/>
+            <br /> -->
             <input type="text" id="email" name="email" placeholder="email"/>
             <br />
-      
-            
             <input type="password" id="senha" name="senha" placeholder="senha" />
             <input type="checkbox" onclick="esconder1()" />Mostrar senha
             <br /><br> <br /><br>
@@ -62,7 +56,7 @@
   // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-app.js";
   import { getDatabase, set, ref, update } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-database.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-auth.js";
+  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-auth.js";
   // TODO: Add SDKs for Firebase products that you want to use
   // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -82,34 +76,31 @@
     const database = getDatabase(app);
     const auth = getAuth();
 
-cadastrar.addEventListener('click',(e) => {
+    cadastrar.addEventListener('click',(e) => {
 
-  var email = document.getElementById('email').value;
-  var senha = document.getElementById('senha').value;
-  var nome = document.getElementById('nome').value;
+      var email = document.getElementById('email').value;
+      var senha = document.getElementById('senha').value;
 
-  createUserWithEmailAndPassword(auth, email, senha)
-    .then((userCredential) => {
-     // Signed in 
-      const user = userCredential.user;
+      if(email != "" && senha != "") {
+        createUserWithEmailAndPassword(auth, email, senha)
+          .then((userCredential) => {
+            window.location.href = "4.confirmacao.html";
+          })
+          .catch((error) => {
+            switch(error.code) {
+                  case "auth/email-already-in-use":
+                    alert("Usuário já existente")
+                    break;
+                  case "auth/invalid-email":
+                    alert("E-mail inválido")
+                    break;
 
-      set(ref(database, 'users/' + user.uid),{
-          nome: nome,
-          email: email,
-          senha: senha
-      })
-      window.location.href = "4.confirmação.html";
+              }
+          });
+        } else {
+          alert("E-Mail e senha não podem estar vazios")
+        }
 
-      // ...
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-
-      alert(errorMessage);
-    // ..
     });
-
-});
 </script>
 </html>     

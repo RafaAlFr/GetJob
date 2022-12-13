@@ -7,7 +7,7 @@
       src="https://kit.fontawesome.com/64d58efce2.js"
       crossorigin="anonymous"
     ></script>
-    <link rel="stylesheet" href="8.enviarvideo.css" />
+    <link rel="stylesheet" href="style/8.enviarvideo.css" />
     <title>Envio de vídeo</title>
   </head>
   <body>
@@ -16,35 +16,119 @@
       <div class="forms">
           <div class="form login">
             <span class="title">Envie seu vídeo</span>
-
             <br> </br>
-            
-
-            <input type="file" name="input_file" placeholder="Selecione um arquivo"
-
-            <form action="#">
+            <!-- <input type="file" name="input_file" placeholder="Selecione um arquivo" -->
                 <div class="input-field">
-                    <input type="text" placeholder="Nome do vídeo" required>
+                  <input type="text" id="nameVideo" name="nameVideo" placeholder="Nome do vídeo" required>
+                  <i class="uil uil-user"></i>
+                </div>
+                <div class="input-field">
+                    <input type="text" id="urlVideo" name="urlVideo" placeholder="URL" required>
                     <i class="uil uil-user"></i>
                 </div>
                 <div class="input-field">
-                    <input type="text" placeholder="descrição" required>
+                    <input type="text" id="descriptionVideo" name="descriptionVideo" placeholder="descrição" required>
                     <i class="uil uil-envelope icon"></i>
                 </div>
-                
-    
                 <div class="input-field button">
-                    <input type="button" value="Envie seu vídeo!">
+                    <input type="button" id="sendVideo" value="Envie seu vídeo!">
                 </div>
-            </form>
-    
-            
           </div>
-
-         
       </div>
   </div>
-
-
     </body>
 </html>
+<script type="module">
+  // SDKs
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-app.js";
+  import { getDatabase, set, ref, get, child, onChildAdded } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-database.js";
+  import { getAuth, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-auth.js";
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyC4ZP5NlN7WvHHK3greEzM9UF04r-gWRQs",
+    authDomain: "teste-cd9c6.firebaseapp.com",
+    databaseURL: "https://teste-cd9c6-default-rtdb.firebaseio.com",
+    projectId: "teste-cd9c6",
+    storageBucket: "teste-cd9c6.appspot.com",
+    messagingSenderId: "888646451776",
+    appId: "1:888646451776:web:9d903ac1a0aa16fbab95a5"
+  };
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+
+  const currentDate = new Date().toLocaleString("pt-BR", {timeZone: "America/Sao_Paulo"});
+  var local = JSON.parse(localStorage.getItem("currentUser"));
+
+  sendVideo.addEventListener('click',(e) => {
+    var nameVideo = document.getElementById('nameVideo').value;
+    var urlVideo = document.getElementById('urlVideo').value;
+    var descriptionVideo = document.getElementById('descriptionVideo').value;
+
+    if(nameVideo != "" && urlVideo != "" && descriptionVideo != "") {
+      writeUserData(local.uid, nameVideo, currentDate, descriptionVideo, urlVideo);
+    } else {
+      alert("Os campos não podem estar vazios");
+    }
+  });
+
+  function writeUserData(userId, nameVideo, dateLocal, descriptionVideo, urlVideo) {
+      set(ref(getDatabase(), 'videos/' + userId + "/video-" + makeid(4)), {
+        nameVideo: nameVideo,
+        data: dateLocal,
+        description: descriptionVideo,
+        url : urlVideo
+      })
+      .then(() => {
+        alert("Vídeo cadastrado com sucesso!!");
+        resetFields();
+        window.location.href = "5.pagdevideo.html";
+      })
+      .catch((error) => {
+        alert("Errou ao cadastrar o vídeo");
+        resetFields();
+        window.location.href = "5.pagdevideo.html";
+      });
+  }
+
+  function resetFields() {
+      document.getElementById('nameVideo').value = "";
+      document.getElementById('urlVideo').value = "";
+      document.getElementById('descriptionVideo').value = "";
+  }
+
+  function makeid(length) {
+      var result           = '';
+      var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      var charactersLength = characters.length;
+      for ( var i = 0; i < length; i++ ) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      }
+      return result;
+  }
+
+  function getCurrentVideoSent(userId) {
+    const dbRef = ref(getDatabase());
+    get(child(dbRef, `videos/${userId}`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        var count = Object.keys(snapshot.val()).length
+        console.log(count);
+
+        const commentsRef = ref(getDatabase(), 'videos/' + userId);
+
+        onChildAdded(commentsRef, (data) => {
+
+          console.log("--"+JSON.stringify(data.key))
+          // addCommentElement(postElement, data.key, data.val().text, data.val().author);
+        });
+      } else {
+        console.log("No data available");
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
+  }
+
+</script>
+  
