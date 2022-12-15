@@ -3,9 +3,6 @@
   <head>
     <title>GetJob</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="firebase.js"></script>
     <link rel="stylesheet" href="style/7.video.css" />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
@@ -16,53 +13,185 @@
   <body>
     <header id="header">
       <a class="logo" href="1.getjob.html">Get<span>Job</span>.</a>
-      <a href="#" onclick="abrirMenu()">&#9776; </a>
+      <a href="#" id="abrirMenu">&#9776; </a>
     </header>
     <nav id="menu">
-      <a href="#" onclick="fecharMenu()">&times; </a>
-
+      <a href="#" id="fecharMenu">&times; </a>
       <a  href="5.pagdevideo.html">Vídeos</a>
-      
       <a  href="6.tiresuaduvida.html">Tire sua duvida</a>
-     
       <a  href="9.teladeperfil.html">Informações de Login</a>
-      
       <a class="btn-link"  href="8.enviarvideo.html">Envie um vídeo</a>         
-
       <a class="btn-link"  href="1.getjob.html">Logout</a>
     </nav>
-   
-
     <main>
-      <section class="grid">
-
-        <div>
-          <p>nome do video</p>
-          <BR> </br>
-            <div class="card">
-              <div class="card-body"></div>
-              </div>
-            </div>
-        </div>
-
+      <section class="grid" id="grid">
+        <div id="gridMain"></div>
         <div class="voting">
-
-          <button class="likebtn">
+          <button class="likebtn" id="likeBtn">
             <p><span id="emoji-html">&#x1F44D;</span> </p>
           </button>
-          <input type="number" id="input1" value="0"
-          name="">
+          <input type="number" id="likeInput" value="0">
 
-          <button class="likebtn">
+          <button class="likebtn" id="dislikeBtn">
             <p><span id="emoji-html">&#x1F44e;</span> </p>
           </button>
-          <input type="number" id="input2" value="0"
-          name="">
-
+          <input type="number" id="dislikeInput" value="0">
         </div>
       </section>
     </main>
-    <script>
+    <script type="module">
+      // SDKs
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-app.js";
+      import { getDatabase, set, ref, get, child } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-database.js";
+      import { getAuth, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-auth.js";
+  
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyC4ZP5NlN7WvHHK3greEzM9UF04r-gWRQs",
+        authDomain: "teste-cd9c6.firebaseapp.com",
+        databaseURL: "https://teste-cd9c6-default-rtdb.firebaseio.com",
+        projectId: "teste-cd9c6",
+        storageBucket: "teste-cd9c6.appspot.com",
+        messagingSenderId: "888646451776",
+        appId: "1:888646451776:web:9d903ac1a0aa16fbab95a5"
+      };
+      const app = initializeApp(firebaseConfig);
+      const database = getDatabase(app);
+
+      var local = JSON.parse(localStorage.getItem("currentUser"));
+      var videoVal = "";
+
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      var urlParamsIdVideo = urlParams.get("videoId");
+
+      //Button actions
+      $("#likeBtn").click(function() {
+        setLike()
+      });
+
+      $("#dislikeBtn").click(function() {
+        setDislike()
+      });
+
+      $("#fecharMenu").click(function() {
+        fecharMenu()
+      });
+
+      $("#abrirMenu").click(function() {
+        abrirMenu()
+      });
+
+      checkInteractions()
+
+      const dbRef = ref(getDatabase());
+        get(child(dbRef, `videos/`)).then((snapshot) => {
+          if (snapshot.exists()) {
+            var childValues = JSON.parse(JSON.stringify(snapshot.val()));
+            Object.keys(childValues).forEach(function(key) {
+              videoVal = childValues[key][urlParamsIdVideo];
+
+              if (typeof(videoVal) != "undefined") {
+                var videoEmbed = "https://www.youtube.com/embed/" + youtubeParser(videoVal["url"]);
+                var frameVideo = "<iframe width=\"900\" height=\"500\" src="+ videoEmbed +"></iframe>";
+
+                document.getElementById('gridMain').innerHTML += 
+                  "<div>" + 
+                    "<h1>" + videoVal["nameVideo"] + "</h1>" +
+                    "</br></br>" +
+                      "<div class=\"card\">" + 
+                        "<div class=\"card-body\">" + frameVideo + "</div>" + 
+                        "</div>" + 
+                      "</div>" + 
+                  "</div>" +
+                  "<div><p>" + videoVal["description"] + "</p></div>";
+              }
+            });
+          } else {
+            console.log("No data available");
+          }
+        }).catch((error) => {
+          console.error(error);
+      });
+
+      function youtubeParser(url){
+          var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+          var match = url.match(regExp);
+          return (match&&match[7].length==11)? match[7] : false;
+      }
+
+      function setLike() {
+          const currentDate = new Date().toLocaleString("pt-BR", {timeZone: "America/Sao_Paulo"});
+          set(ref(getDatabase(), 'interactions/' + local.uid + "/" + urlParamsIdVideo), {
+            like: true,
+            data: currentDate,
+            idVideo: urlParamsIdVideo
+          })
+          .then(() => {
+            console.log("sucesso!!");
+            if($("#likeInput").val() > 1) {
+              $("#likeInput").val($("#likeInput").val() + 1)
+            } else {
+              $("#likeInput").val(1)
+            }
+          })
+          .catch((error) => {
+            console.log("Erro");
+          });
+      }
+
+      function setDislike() {
+          const currentDate = new Date().toLocaleString("pt-BR", {timeZone: "America/Sao_Paulo"});
+          set(ref(getDatabase(), 'interactions/' + local.uid + "/" + urlParamsIdVideo), {
+            like: false,
+            data: currentDate,
+            idVideo: urlParamsIdVideo
+          })
+          .then(() => {
+            console.log("sucesso!!");
+            if($("#dislikeInput").val() > 1) {
+              $("#dislikeInput").val($("#dislikeInput").val() + 1)
+            } else {
+              $("#dislikeInput").val(1)
+            }
+          })
+          .catch((error) => {
+            console.log("Erro");
+          });
+      }
+
+      function checkInteractions() {
+        const dbRef = ref(getDatabase());
+        get(child(dbRef, 'interactions/')).then((snapshot) => {
+          if (snapshot.exists()) {
+              var snapshotInteractions = JSON.parse(JSON.stringify(snapshot.val()));
+              var countLikes = 0;
+              var countDislikes = 0;
+              Object.keys(snapshotInteractions).forEach(function(key) {
+                var snapshotInteractionsValues = snapshotInteractions[key][urlParamsIdVideo];
+                
+                if (typeof(snapshotInteractionsValues) != "undefined") {
+                  console.log(snapshotInteractionsValues)
+                  if(snapshotInteractionsValues.like) {
+                    countLikes += 1;
+                  } else {
+                    countDislikes += 1;
+                  }
+                } 
+              });
+
+              $("#likeInput").val(countLikes);
+              $("#dislikeInput").val(countDislikes);
+
+          } else {
+            console.log("No data available");
+          }
+        }).catch((error) => {
+          console.error(error);
+        });
+      }
+
       function abrirMenu() {
         document.getElementById('menu').style.width = '250px';
         document.getElementById('conteudo').style.marginRight = '250px';

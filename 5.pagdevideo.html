@@ -35,98 +35,7 @@
      </script> -->
         </div>
       </section>
-      <section class="flex">
-        <div>
-            <img
-              src="https://i0.wp.com/www.multarte.com.br/wp-content/uploads/2018/12/fundo-cinza-escuro19.jpg?resize=696%2C547&ssl=1"
-            />
-            <p>legenda</p>
-          </div>
-          <div>
-            <img
-              src="https://i0.wp.com/www.multarte.com.br/wp-content/uploads/2018/12/fundo-cinza-escuro19.jpg?resize=696%2C547&ssl=1"
-            />
-            <p>legenda</p>
-          </div>
-          <div>
-            <img
-              src="https://i0.wp.com/www.multarte.com.br/wp-content/uploads/2018/12/fundo-cinza-escuro19.jpg?resize=696%2C547&ssl=1"
-            />
-            <p>legenda</p>
-          </div>
-        <div>
-          <img
-            src="https://i0.wp.com/www.multarte.com.br/wp-content/uploads/2018/12/fundo-cinza-escuro19.jpg?resize=696%2C547&ssl=1"
-          />
-          <p>legenda</p>
-        </div>
-        <div>
-          <img
-            src="https://i0.wp.com/www.multarte.com.br/wp-content/uploads/2018/12/fundo-cinza-escuro19.jpg?resize=696%2C547&ssl=1"
-          />
-          <p>legenda</p>
-        </div>
-        <div>
-          <img
-            src="https://i0.wp.com/www.multarte.com.br/wp-content/uploads/2018/12/fundo-cinza-escuro19.jpg?resize=696%2C547&ssl=1"
-          />
-          <p>legenda</p>
-        </div>
-        <div>
-          <img
-            src="https://i0.wp.com/www.multarte.com.br/wp-content/uploads/2018/12/fundo-cinza-escuro19.jpg?resize=696%2C547&ssl=1"
-          />
-          <p>legenda</p>
-        </div>
-        <div>
-          <img
-            src="https://i0.wp.com/www.multarte.com.br/wp-content/uploads/2018/12/fundo-cinza-escuro19.jpg?resize=696%2C547&ssl=1"
-          />
-          <p>legenda</p>
-        </div>
-        <div>
-          <img
-            src="https://i0.wp.com/www.multarte.com.br/wp-content/uploads/2018/12/fundo-cinza-escuro19.jpg?resize=696%2C547&ssl=1"
-          />
-          <p>legenda</p>
-        </div>
-        <div>
-          <img
-            src="https://i0.wp.com/www.multarte.com.br/wp-content/uploads/2018/12/fundo-cinza-escuro19.jpg?resize=696%2C547&ssl=1"
-          />
-          <p>legenda</p>
-        </div>
-        <div>
-          <img
-            src="https://i0.wp.com/www.multarte.com.br/wp-content/uploads/2018/12/fundo-cinza-escuro19.jpg?resize=696%2C547&ssl=1"
-          />
-          <p>legenda</p>
-        </div>
-        <div>
-          <img
-            src="https://i0.wp.com/www.multarte.com.br/wp-content/uploads/2018/12/fundo-cinza-escuro19.jpg?resize=696%2C547&ssl=1"
-          />
-          <p>legenda</p>
-        </div>
-        <div>
-          <img
-            src="https://i0.wp.com/www.multarte.com.br/wp-content/uploads/2018/12/fundo-cinza-escuro19.jpg?resize=696%2C547&ssl=1"
-          />
-          <p>legenda</p>
-        </div>
-        <div>
-          <img
-            src="https://i0.wp.com/www.multarte.com.br/wp-content/uploads/2018/12/fundo-cinza-escuro19.jpg?resize=696%2C547&ssl=1"
-          />
-          <p>legenda</p>
-        </div>
-        <div>
-          <img
-            src="https://i0.wp.com/www.multarte.com.br/wp-content/uploads/2018/12/fundo-cinza-escuro19.jpg?resize=696%2C547&ssl=1"
-          />
-          <p>legenda</p>
-        </div>
-      </section>
+      <section class="flex" id="listVideos"></section>
     </main>
 
     <div id="id01" class="modal">
@@ -170,12 +79,27 @@
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
 
-    // console.log(JSON.parse(localStorage.getItem("currentUser")))
+    var local = JSON.parse(localStorage.getItem("currentUser"));
 
     const dbRef = ref(getDatabase());
     get(child(dbRef, `videos/`)).then((snapshot) => {
       if (snapshot.exists()) {
-        console.log(snapshot.val());
+        snapshot.forEach(function(child) {
+          var childValues = JSON.parse(JSON.stringify(child.val()));
+          Object.keys(childValues).forEach(function(key) {
+            var ytId = youtubeParser(childValues[key].url);
+
+            document.getElementById('listVideos').innerHTML += 
+              "<div>" + 
+                "<a href=\"7.video.html?videoId="+childValues[key].idVideo+"\">" + 
+                "<img src=\"https://img.youtube.com/vi/" + ytId + "/0.jpg\" />" + 
+                "<p>" + childValues[key].nameVideo + "</p>" + 
+                "<p>Data: " + childValues[key].data + "</p>" + 
+                "</a>"
+              "</div>";
+          });
+        });
+
       } else {
         console.log("No data available");
       }
@@ -184,7 +108,11 @@
     });
 
 
-    //Fazer login Auth FB usando o metodo reauthenticateWithCredential
+    function youtubeParser(url){
+        var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+        var match = url.match(regExp);
+        return (match&&match[7].length==11)? match[7] : false;
+    }
 
     var modal = document.getElementById('id01');
     window.onclick = function(event) {

@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script
       src="https://kit.fontawesome.com/64d58efce2.js"
-      crossorigin="anonymous"
-    ></script>
+      crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style/8.enviarvideo.css" />
     <title>Envio de vídeo</title>
   </head>
@@ -74,11 +73,13 @@
   });
 
   function writeUserData(userId, nameVideo, dateLocal, descriptionVideo, urlVideo) {
-      set(ref(getDatabase(), 'videos/' + userId + "/video-" + makeid(4)), {
+      var idVideo = "video-" + makeid(4);
+      set(ref(getDatabase(), 'videos/' + userId + "/" + idVideo), {
         nameVideo: nameVideo,
         data: dateLocal,
         description: descriptionVideo,
-        url : urlVideo
+        url : urlVideo,
+        idVideo: idVideo
       })
       .then(() => {
         alert("Vídeo cadastrado com sucesso!!");
@@ -108,27 +109,27 @@
       return result;
   }
 
-  function getCurrentVideoSent(userId) {
-    const dbRef = ref(getDatabase());
-    get(child(dbRef, `videos/${userId}`)).then((snapshot) => {
-      if (snapshot.exists()) {
-        var count = Object.keys(snapshot.val()).length
-        console.log(count);
+  // function getCurrentVideoSent(userId) {
+  //   const dbRef = ref(getDatabase());
+  //   get(child(dbRef, `videos/${userId}`)).then((snapshot) => {
+  //     if (snapshot.exists()) {
+  //       var count = Object.keys(snapshot.val()).length
+  //       console.log(count);
 
-        const commentsRef = ref(getDatabase(), 'videos/' + userId);
+  //       const commentsRef = ref(getDatabase(), 'videos/' + userId);
 
-        onChildAdded(commentsRef, (data) => {
+  //       onChildAdded(commentsRef, (data) => {
 
-          console.log("--"+JSON.stringify(data.key))
-          // addCommentElement(postElement, data.key, data.val().text, data.val().author);
-        });
-      } else {
-        console.log("No data available");
-      }
-    }).catch((error) => {
-      console.error(error);
-    });
-  }
+  //         console.log("--"+JSON.stringify(data.key))
+  //         // addCommentElement(postElement, data.key, data.val().text, data.val().author);
+  //       });
+  //     } else {
+  //       console.log("No data available");
+  //     }
+  //   }).catch((error) => {
+  //     console.error(error);
+  //   });
+  // }
 
 </script>
   
